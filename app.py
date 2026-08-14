@@ -273,48 +273,51 @@ if not st.session_state["user"]:
 
         # TAB 1: FAZER LOGIN TRADICIONAL
         with tab_login:
-            with st.form("form_login"):
-                st.markdown("<p style='color:#f8fafc; font-weight:600;'>Acesse com seu e-mail e senha cadastrados:</p>", unsafe_allow_html=True)
-                log_email = st.text_input("E-mail", key="log_email")
-                log_senha = st.text_input("Senha", type="password", key="log_senha")
+            st.markdown("<p style='color:#f8fafc; font-weight:600;'>Acesse com seu e-mail e senha cadastrados:</p>", unsafe_allow_html=True)
+            log_email = st.text_input("E-mail", key="log_email")
+            log_senha = st.text_input("Senha", type="password", key="log_senha")
 
-                btn_login = st.form_submit_button("🔑 Entrar", type="primary", use_container_width=True)
-                if btn_login:
-                    if not log_email.strip() or not log_senha.strip():
-                        st.error("Preencha o e-mail e a senha.")
+            if st.button("🔑 Entrar", type="primary", use_container_width=True, key="btn_login_direct"):
+                if not log_email.strip() or not log_senha.strip():
+                    st.error("Preencha o e-mail e a senha.")
+                else:
+                    user_obj, msg = db.autenticar_usuario(log_email, log_senha)
+                    if user_obj:
+                        st.session_state["user"] = user_obj
+                        st.success(f"Bem-vindo(a) de volta, {user_obj['nome']}!")
+                        st.rerun()
                     else:
-                        user_obj, msg = db.autenticar_usuario(log_email, log_senha)
-                        if user_obj:
-                            st.session_state["user"] = user_obj
-                            st.success(f"Bem-vindo(a) de volta, {user_obj['nome']}!")
-                            st.rerun()
-                        else:
-                            st.error(msg)
+                        st.error(msg)
 
         # TAB 2: CRIAR CONTA TRADICIONAL
         with tab_tradicional:
-            with st.form("form_criar_conta"):
-                st.markdown("<p style='color:#f8fafc; font-weight:600;'>Preencha os campos abaixo para criar sua conta:</p>", unsafe_allow_html=True)
-                reg_nome = st.text_input("Nome", key="reg_nome")
-                reg_sobrenome = st.text_input("Sobrenome", key="reg_sobrenome")
-                reg_email = st.text_input("E-mail", key="reg_email")
-                reg_senha = st.text_input("Senha", type="password", key="reg_senha")
-                reg_conf_senha = st.text_input("Confirmação de Senha", type="password", key="reg_conf_senha")
+            st.markdown("<p style='color:#f8fafc; font-weight:600;'>Preencha os campos abaixo para criar sua conta:</p>", unsafe_allow_html=True)
+            reg_nome = st.text_input("Nome", key="reg_nome")
+            reg_sobrenome = st.text_input("Sobrenome", key="reg_sobrenome")
+            reg_email = st.text_input("E-mail", key="reg_email")
+            reg_senha = st.text_input("Senha", type="password", key="reg_senha")
+            reg_conf_senha = st.text_input("Confirmação de Senha", type="password", key="reg_conf_senha")
 
-                btn_registrar = st.form_submit_button("✨ Criar Conta", type="primary", use_container_width=True)
-                if btn_registrar:
-                    if not (reg_nome.strip() and reg_sobrenome.strip() and reg_email.strip() and reg_senha.strip() and reg_conf_senha.strip()):
-                        st.error("Por favor, preencha todos os campos do formulário.")
-                    elif reg_senha != reg_conf_senha:
-                        st.error("As senhas digitadas não coincidem. Verifique e tente novamente.")
-                    elif len(reg_senha) < 4:
-                        st.error("A senha deve conter no mínimo 4 caracteres.")
+            # Feedback de validação visual de confirmação de senha em tempo real
+            if reg_conf_senha:
+                if reg_senha == reg_conf_senha:
+                    st.markdown("<p style='color:#4ade80; font-size:0.85rem; font-weight:600;'>✅ As senhas coincidem.</p>", unsafe_allow_html=True)
+                else:
+                    st.markdown("<p style='color:#fca5a5; font-size:0.85rem; font-weight:600;'>❌ As senhas não coincidem.</p>", unsafe_allow_html=True)
+
+            if st.button("✨ Criar Conta", type="primary", use_container_width=True, key="btn_reg_direct"):
+                if not (reg_nome.strip() and reg_sobrenome.strip() and reg_email.strip() and reg_senha.strip() and reg_conf_senha.strip()):
+                    st.error("Por favor, preencha todos os campos do formulário.")
+                elif reg_senha != reg_conf_senha:
+                    st.error("As senhas digitadas não coincidem. Verifique e tente novamente.")
+                elif len(reg_senha) < 4:
+                    st.error("A senha deve conter no mínimo 4 caracteres.")
+                else:
+                    ok, msg = db.registrar_usuario(reg_nome, reg_sobrenome, reg_email, reg_senha)
+                    if ok:
+                        st.success("Conta criada com sucesso! Você já pode fazer login na aba 'Fazer Login'.")
                     else:
-                        ok, msg = db.registrar_usuario(reg_nome, reg_sobrenome, reg_email, reg_senha)
-                        if ok:
-                            st.success("Conta criada com sucesso! Você já pode fazer login na aba 'Fazer Login'.")
-                        else:
-                            st.error(msg)
+                        st.error(msg)
 
     st.stop()
 
