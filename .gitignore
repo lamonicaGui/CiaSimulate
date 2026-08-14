@@ -1,0 +1,16 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local environment / secrets
+.env
+venv/
+ENV/
+
+# Temporary page images and test files
+page_*.png
+*.log
+
+# Streamlit config if local
+.streamlit/secrets.toml

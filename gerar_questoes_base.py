@@ -1,0 +1,189 @@
+import json
+
+questoes_iniciais = [
+    {
+        "id": 1,
+        "texto": "Qual das seguintes ações o comitê de auditoria deve tomar para promover a independência organizacional da função de auditoria interna?",
+        "opcoes": {
+            "A": "Delegar a aprovação final do plano de auditoria interna baseado em riscos ao executivo chefe de auditoria (CAE).",
+            "B": "Aprovar o orçamento anual e o plano de recursos para a função de auditoria interna.",
+            "C": "Auxiliar o CAE na contratação de pessoal de auditoria interna objetivo e competente.",
+            "D": "Incentivar o CAE a se comunicar e coordenar com o auditor externo."
+        },
+        "correta": "B",
+        "explicacoes": {
+            "A": "Incorreta: A aprovação final do plano de auditoria deve residir no conselho/comitê de auditoria, e não ser delegada inteiramente ao CAE.",
+            "B": "Correta: Aprovar o orçamento da auditoria interna e o plano de recursos é crítico para estabelecer a independência organizacional e garantir autonomia operacional.",
+            "C": "Incorreta: Auxiliar na contratação direta da equipe não é um papel apropriado para o conselho, embora o conselho deva aprovar decisões relativas à nomeação e destituição do CAE.",
+            "D": "Incorreta: Embora a coordenação entre auditores internos e externos seja incentivada, isso não promoveria diretamente a independência organizacional."
+        },
+        "secao": "Seção A: Planejamento do Trabalho (50%)"
+    },
+    {
+        "id": 2,
+        "texto": "Com relação à governança de TI, qual das seguintes opções é a função mais eficaz e apropriada para a função de auditoria interna?",
+        "opcoes": {
+            "A": "Avaliar de forma independente as habilidades e a experiência de potenciais candidatos a Diretor de Informação (CIO) para avaliar a melhor adequação com base no apetite ao risco da organização.",
+            "B": "Avaliar os padrões de governança da organização e as atividades relacionadas à TI para identificar lacunas e desenvolver políticas, garantindo o alinhamento com o apetite ao risco da organização.",
+            "C": "Auxiliar a administração na interpretação de exposições complexas a riscos de privacidade e segurança relacionados à TI e na avaliação de potenciais estratégias de mitigação.",
+            "D": "Avaliar se as atividades de governança estão alinhadas com o apetite ao risco da organização e levar em consideração os riscos emergentes."
+        },
+        "correta": "D",
+        "explicacoes": {
+            "A": "Incorreta: Embora a auditoria interna possa avaliar se um CIO está no cargo e faz parte da alta administração, avaliar e selecionar candidatos é responsabilidade da gestão.",
+            "B": "Incorreta: A auditoria interna pode avaliar os padrões de governança e identificar lacunas, mas o desenvolvimento de políticas para sanar essas lacunas é uma função da gestão.",
+            "C": "Incorreta: Auxiliar a administração na avaliação de riscos complexos de TI e estratégias de mitigação pode exceder as habilidades ou conhecimentos da função. Além disso, determinar e implementar estratégias é responsabilidade da gestão.",
+            "D": "Correta: O papel da auditoria interna é avaliar se as atividades de governança, incluindo a governança de TI, estão alinhadas com o apetite ao risco da organização e consideram os riscos emergentes."
+        },
+        "secao": "Seção A: Planejamento do Trabalho (50%)"
+    },
+    {
+        "id": 3,
+        "texto": "Qual das alternativas a seguir é um exemplo de técnica de controle gerencial?",
+        "opcoes": {
+            "A": "Um orçamento.",
+            "B": "Uma avaliação de riscos.",
+            "C": "O conselho de administração.",
+            "D": "O ambiente de controle."
+        },
+        "correta": "A",
+        "explicacoes": {
+            "A": "Correta: Um orçamento serve como uma técnica de controle gerencial porque permite que as organizações monitorem o desempenho, controlem custos, aloquem recursos e façam ajustes se os resultados reais se desviarem dos números orçados.",
+            "B": "Incorreta: Uma avaliação de risco é usada para identificar e classificar os riscos encontrados em uma organização, não sendo por si só uma técnica de controle.",
+            "C": "Incorreta: O conselho de administração realiza a supervisão e estabelece a estrutura geral de gerenciamento de riscos.",
+            "D": "Incorreta: O ambiente de controle reflete a atitude coletiva prevalecente em uma organização e é levado em consideração quando uma técnica de controle é recomendada."
+        },
+        "secao": "Seção A: Planejamento do Trabalho (50%)"
+    },
+    {
+        "id": 4,
+        "texto": "Qual é o propósito primário da auditoria interna, conforme definido pelas Normas Globais de Auditoria Interna (IIA V2025)?",
+        "opcoes": {
+            "A": "Detectar e investigar fraudes dentro de uma organização.",
+            "B": "Garantir a conformidade com regulamentos e leis externas.",
+            "C": "Desenvolver e implementar estratégias financeiras para o crescimento organizacional.",
+            "D": "Fornecer serviços de avaliação (assurance) e consultoria para melhorar os processos de governança, gerenciamento de riscos e controle de uma organização."
+        },
+        "correta": "D",
+        "explicacoes": {
+            "A": "Incorreta: Esta opção é um equívoco comum. Embora a auditoria avalie controles antifraude, detectar e investigar fraudes é primariamente responsabilidade da administração.",
+            "B": "Incorreta: Embora a auditoria de conformidade faça parte das atividades, não é o propósito primário global.",
+            "C": "Incorreta: Desenvolver e implementar estratégias financeiras é função da gestão financeira.",
+            "D": "Correta: As Normas Globais de Auditoria Interna enfatizam o papel duplo em fornecer avaliação independente e serviços de consultoria valiosos para melhorar a governança, riscos e controles."
+        },
+        "secao": "Seção A: Planejamento do Trabalho (50%)"
+    },
+    {
+        "id": 5,
+        "texto": "Ao ingressar na função de auditoria interna, cada novo auditor recebe uma cópia do manual de auditoria. Qual das seguintes políticas do manual apresenta o maior risco de comprometer a objetividade da auditoria?",
+        "opcoes": {
+            "A": "Os auditores internos devem obter 80 horas de educação profissional continuada a cada dois anos, das quais 20 devem ser relacionadas à auditoria, e o restante pode ser relacionado a operações.",
+            "B": "Os auditores internos devem realizar rotação para outras áreas da organização em atribuições não relacionadas à auditoria para obter uma compreensão das operações da organização.",
+            "C": "Os auditores internos devem ter acesso direto e irrestrito ao pessoal e às informações em toda a organização e ao conselho de administração.",
+            "D": "Os auditores internos devem passar por avaliações de desempenho anuais conduzidas pelo executivo chefe de auditoria, que se reporta administrativamente ao diretor financeiro (CFO)."
+        },
+        "correta": "B",
+        "explicacoes": {
+            "A": "Incorreta: A objetividade não é afetada por horas de CPE operacional, que ajudam na competência.",
+            "B": "Correta: A rotação para operações e posterior retorno à auditoria aumenta o risco de a objetividade ser comprometida. Auditores devem se abster de avaliar áreas onde atuaram recentemente.",
+            "C": "Incorreta: Ter acesso irrestrito promove a independência e eficácia da auditoria.",
+            "D": "Incorreta: É apropriado que o CAE avalie a equipe. O reporte administrativo ao CFO não prejudica a independência se o reporte funcional for ao Conselho."
+        },
+        "secao": "Seção A: Planejamento do Trabalho (50%)"
+    },
+    {
+        "id": 6,
+        "texto": "Durante a revisão do programa de dissuasão de fraudes no varejo de uma organização, um funcionário menciona que um sistema caro de informações de vigilância de fraudes é raramente utilizado. O auditor interno conclui que funcionários adicionais são necessários para utilizar adequadamente o sistema em todo o seu potencial. De acordo com a orientação do IIA, qual critério de evidência mais carece para chegar a essa conclusão?",
+        "opcoes": {
+            "A": "Suficiência.",
+            "B": "Confiabilidade.",
+            "C": "Relevância.",
+            "D": "Utilidade."
+        },
+        "correta": "A",
+        "explicacoes": {
+            "A": "Correta: Um depoimento isolado não representa evidência suficiente para apoiar a conclusão de que novos funcionários são necessários. Evidências adicionais (logs, entrevistas com supervisores, análises de capacidade) deveriam ser coletadas.",
+            "B": "Incorreta: O depoimento tem certa confiabilidade, mas é limitado por ser uma percepção individual.",
+            "C": "Incorreta: A opinião do funcionário é relevante para o tema, mas a relevância por si só não substitui a quantidade/suficiência.",
+            "D": "Incorreta: A informação é útil, mas a falha principal na fundamentação da conclusão do auditor é a falta de evidências suficientes."
+        },
+        "secao": "Seção B: Coleta, Análise e Avaliação de Informações (40%)"
+    },
+    {
+        "id": 7,
+        "texto": "Qual das alternativas a seguir descreve melhor a diretriz para a preparação de papéis de trabalho de engajamento de auditoria?",
+        "opcoes": {
+            "A": "Os papéis de trabalho devem ser compreensíveis para o auditor encarregado e para o executivo chefe de auditoria.",
+            "B": "Os papéis de trabalho devem ser compreensíveis para o cliente da auditoria e para o conselho.",
+            "C": "Os papéis de trabalho devem ser compreensíveis para outro auditor interno que não esteve envolvido no engajamento.",
+            "D": "Os papéis de trabalho devem ser compreensíveis para auditores externos e agências reguladoras."
+        },
+        "correta": "C",
+        "explicacoes": {
+            "A": "Incorreta: O teste de compreensibilidade vai além do auditor encarregado e do CAE.",
+            "B": "Incorreta: A administração do cliente e o conselho não são o público primário dos papéis de trabalho detalhados de auditoria.",
+            "C": "Correta: De acordo com o IIA, os papéis de trabalho devem ser claros e autoexplicativos a ponto de permitir que outro auditor interno prudente e qualificado, que não participou do trabalho, os entenda e refaça a análise se necessário.",
+            "D": "Incorreta: Embora terceiros possam revisá-los, o padrão oficial de elaboração é a compreensibilidade para outro auditor interno não envolvido."
+        },
+        "secao": "Seção B: Coleta, Análise e Avaliação de Informações (40%)"
+    },
+    {
+        "id": 8,
+        "texto": "Ao revisar papéis de trabalho, os supervisores de engajamento podem solicitar evidências adicionais ou esclarecimentos por meio de notas de revisão. De acordo com a orientação do IIA, qual das seguintes afirmações é verdadeira em relação às notas de revisão do supervisor de engajamento?",
+        "opcoes": {
+            "A": "As notas de revisão podem ser eliminadas da documentação final uma vez que as preocupações do supervisor de engajamento tenham sido resolvidas.",
+            "B": "A administração da área sob revisão deve abordar as notas de revisão do supervisor de engajamento antes que o relatório de auditoria possa ser finalizado.",
+            "C": "O executivo chefe de auditoria deve rubricar ou assinar as notas de revisão do supervisor de engajamento para fornecer evidência de supervisão adequada do engajamento.",
+            "D": "As notas de revisão fornecem prova documentada de que o engajamento é supervisionado adequadamente e devem ser retidas para o programa de garantia de qualidade e melhoria."
+        },
+        "correta": "A",
+        "explicacoes": {
+            "A": "Correta: Conforme orientações práticas do IIA, as notas de revisão servem para comunicação e esclarecimento durante o trabalho. Uma vez atendidas e corrigidas as pendências nos papéis de trabalho finais, as notas de revisão podem ser descartadas.",
+            "B": "Incorreta: As notas de revisão são um instrumento interno da equipe de auditoria, não devendo ser enviadas para a administração auditada.",
+            "C": "Incorreta: O CAE não precisa assinar cada nota de revisão individual.",
+            "D": "Incorreta: As notas de revisão descartáveis não precisam ser mantidas permanentemente na pasta final auditada se a evidência final ajustada for conclusiva."
+        },
+        "secao": "Seção B: Coleta, Análise e Avaliação de Informações (40%)"
+    },
+    {
+        "id": 9,
+        "texto": "Ao planejar um engajamento de auditoria, o que deve ser reconhecido em relação ao risco de segurança cibernética?",
+        "opcoes": {
+            "A": "Os riscos de segurança cibernética são idênticos em todas as organizações, independentemente do setor.",
+            "B": "A instalação de softwares antivírus e malware previne riscos de segurança cibernética.",
+            "C": "A implantação de medidas adequadas de segurança cibernética garante o sucesso do negócio.",
+            "D": "Negócios críticos e informações valiosas aumentam os riscos de segurança cibernética."
+        },
+        "correta": "D",
+        "explicacoes": {
+            "A": "Incorreta: Os riscos cibernéticos diferem significativamente por setor, arquitetura tecnológica e modelos de negócios.",
+            "B": "Incorreta: Software antivírus é apenas uma camada básica de controle e não previne ameaças sofisticadas, engenharia social ou vulnerabilidades de dia zero.",
+            "C": "Incorreta: A cibersegurança protege ativos, mas não garante por si só o sucesso mercadológico ou financeiro da empresa.",
+            "D": "Correta: Ativos de informação valiosos e processos de negócios críticos representam maior atratividade para ameaças cibernéticas, elevando o perfil de risco do engajamento."
+        },
+        "secao": "Seção A: Planejamento do Trabalho (50%)"
+    },
+    {
+        "id": 10,
+        "texto": "De acordo com as Normas Globais de Auditoria Interna (IIA V2025), qual das seguintes afirmações é verdadeira em relação às responsabilidades de monitoramento do executivo chefe de auditoria (CAE)?",
+        "opcoes": {
+            "A": "O CAE é responsável por relatar o status do monitoramento à alta administração quando solicitado.",
+            "B": "Auxiliar a administração na implementação de ações corretivas.",
+            "C": "Determinar a frequência e a abordagem para o monitoramento.",
+            "D": "Incluir todos os tipos de observações no processo de monitoramento."
+        },
+        "correta": "C",
+        "explicacoes": {
+            "A": "Incorreta: O relato do status deve seguir um plano estabelecido e contínuo, não ocorrendo apenas passivamente quando solicitado.",
+            "B": "Incorreta: Implementar ações corretivas é responsabilidade exclusiva da gestão. A auditoria apenas monitora e avalia a adequação.",
+            "C": "Correta: O CAE deve exercer julgamento profissional para estabelecer a frequência e a metodologia de monitoramento do acompanhamento das observações e planos de ação.",
+            "D": "Incorreta: Nem todas as observações insignificantes exigem acompanhamento formal contínuo; o CAE prioriza com base no risco."
+        },
+        "secao": "Seção C: Supervisão e Comunicação (10%)"
+    }
+]
+
+with open(r"C:\Users\guilh\OneDrive\PinnacleAI\Projetos\Simulado CIA\questoes_base.json", "w", encoding="utf-8") as f:
+    json.dump({"questoes": questoes_iniciais}, f, ensure_ascii=False, indent=2)
+
+print(f"Salvou {len(questoes_iniciais)} questões em questoes_base.json")
