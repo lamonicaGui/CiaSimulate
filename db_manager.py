@@ -5,7 +5,9 @@ from datetime import datetime
 from supabase import create_client
 
 SUPABASE_URL = 'https://xcflsfmgtvztykoidegg.supabase.co'
-SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhjZmxzZm1ndHZ6dHlrb2lkZWdnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NjcwNTg0OCwiZXhwIjoyMTAyMjgxODQ4fQ.yA7YnXLiiRjFeNlVRgWBDt5CVfixGJcaAJOA3ZAQZbo'
+SUPABASE_SERVICE_ROLE = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhjZmxzZm1ndHZ6dHlrb2lkZWdnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NjcwNTg0OCwiZXhwIjoyMTAyMjgxODQ4fQ.yA7YnXLiiRjFeNlVRgWBDt5CVfixGJcaAJOA3ZAQZbo'
+SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhjZmxzZm1ndHZ6dHlrb2lkZWdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MDU4NDgsImV4cCI6MjEwMjI4MTg0OH0.vgPctgFwgk-9qu3R8kwmEAmvhKWP614LG93iemIUQAo'
+SUPABASE_PUBLISHABLE = 'sb_publishable_GXAG6uGIXg-zjYS4kGEwdA_mdimAaqd'
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 FILE_USUARIOS = os.path.join(BASE_DIR, "simulador_usuarios.json")
@@ -14,7 +16,8 @@ FILE_QUESTOES = os.path.join(BASE_DIR, "questoes_base.json")
 
 def get_supabase():
     try:
-        client = create_client(SUPABASE_URL, SUPABASE_KEY)
+        # Usa a service_role key para acesso administrativo com bypass de RLS
+        client = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE)
         return client
     except Exception:
         return None
