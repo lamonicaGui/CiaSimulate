@@ -315,7 +315,13 @@ if not st.session_state["user"]:
                 else:
                     ok, msg = db.registrar_usuario(reg_nome, reg_sobrenome, reg_email, reg_senha)
                     if ok:
-                        st.success("Conta criada com sucesso! Você já pode fazer login na aba 'Fazer Login'.")
+                        user_obj, _ = db.autenticar_usuario(reg_email, reg_senha)
+                        if user_obj:
+                            st.session_state["user"] = user_obj
+                            st.success(f"Conta criada com sucesso! Bem-vindo(a), {user_obj['nome']}!")
+                            st.rerun()
+                        else:
+                            st.success("Conta criada com sucesso! Faça login para continuar.")
                     else:
                         st.error(msg)
 
