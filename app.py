@@ -111,20 +111,22 @@ st.markdown("""
         background-color: #38bdf8 !important;
     }
     
-    /* Login Centered Container */
+    /* Login Centered Container - Fluido e Responsivo */
     .login-container {
+        width: 100%;
         max-width: 550px;
-        margin: 2rem auto;
+        margin: 1.5rem auto;
         background: rgba(30, 41, 59, 0.85);
         backdrop-filter: blur(16px);
         border: 1px solid rgba(255, 255, 255, 0.15);
-        padding: 2.5rem;
+        padding: 2rem 1.5rem;
         border-radius: 20px;
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        box-sizing: border-box;
     }
     
     .login-title {
-        font-size: 2.2rem;
+        font-size: clamp(1.5rem, 5vw, 2.2rem);
         font-weight: 700;
         text-align: center;
         background: linear-gradient(90deg, #38bdf8, #818cf8);
@@ -136,9 +138,19 @@ st.markdown("""
     .login-subtitle {
         text-align: center;
         color: #cbd5e1;
-        font-size: 1rem;
-        margin-bottom: 2rem;
+        font-size: clamp(0.85rem, 3vw, 1rem);
+        margin-bottom: 1.5rem;
         line-height: 1.5;
+    }
+
+    /* Garantir que todos os containers principais fiquem limitados e centralizados */
+    [data-testid="stForm"], [data-testid="stVerticalBlock"] > div {
+        max-width: 100% !important;
+    }
+
+    /* Layout responsivo universal para formulários e elementos */
+    .stTextInput, .stSelectbox, .stNumberInput {
+        width: 100% !important;
     }
     
     /* Header Card */
@@ -153,7 +165,7 @@ st.markdown("""
     }
     
     .header-title {
-        font-size: 2.2rem;
+        font-size: clamp(1.4rem, 4vw, 2.2rem);
         font-weight: 700;
         background: linear-gradient(90deg, #38bdf8, #818cf8);
         -webkit-background-clip: text;
@@ -163,7 +175,7 @@ st.markdown("""
     
     .header-subtitle {
         color: #cbd5e1;
-        font-size: 1rem;
+        font-size: clamp(0.85rem, 2.5vw, 1rem);
         margin-top: 0.3rem;
     }
     
@@ -233,6 +245,57 @@ st.markdown("""
         color: #0f172a !important;
         font-weight: 600 !important;
     }
+
+    /* ========================================================= */
+    /* RESPONSIVIDADE FLUIDA & MODOS ADAPTATIVOS (DESKTOP E MOBILE) */
+    /* ========================================================= */
+    
+    /* Ajustes Gerais de Padding para telas pequenas */
+    .block-container {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        max-width: 100% !important;
+    }
+
+    /* Regras para Dispositivos Móveis (Celulares e Tablets <= 768px) */
+    @media screen and (max-width: 768px) {
+        .block-container {
+            padding: 0.75rem 0.5rem !important;
+        }
+
+        .login-container {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0.25rem auto !important;
+            padding: 1rem 0.75rem !important;
+            border-radius: 12px !important;
+        }
+
+        .stTabs [data-baseweb="tab-list"] {
+            display: flex !important;
+            width: 100% !important;
+        }
+
+        .stTabs [data-baseweb="tab-list"] button {
+            flex: 1 1 50% !important;
+            padding: 8px 4px !important;
+            font-size: 0.85rem !important;
+            text-align: center !important;
+        }
+
+        .stButton > button, div.stButton > button {
+            font-size: 0.95rem !important;
+            padding: 0.5rem 0.75rem !important;
+            width: 100% !important;
+        }
+
+        /* Empilhamento automático em telas pequenas */
+        [data-testid="column"] {
+            width: 100% !important;
+            flex: 1 1 100% !important;
+            min-width: 100% !important;
+        }
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -263,67 +326,65 @@ if not st.session_state["user"]:
     </div>
     """, unsafe_allow_html=True)
 
-    col_center = st.columns([1, 2, 1])[1]
+    # Renderização responsiva do container centralizado sem colunas de espaço fixo
+    tab_login, tab_tradicional = st.tabs([
+        "🔑 Fazer Login", 
+        "📝 Criar Conta"
+    ])
 
-    with col_center:
-        tab_login, tab_tradicional = st.tabs([
-            "🔑 Fazer Login", 
-            "📝 Criar Conta"
-        ])
+    # TAB 1: FAZER LOGIN TRADICIONAL
+    with tab_login:
+        st.markdown("<p style='color:#f8fafc; font-weight:600;'>Acesse com seu e-mail e senha cadastrados:</p>", unsafe_allow_html=True)
+        log_email = st.text_input("E-mail", key="log_email")
+        log_senha = st.text_input("Senha", type="password", key="log_senha")
 
-        # TAB 1: FAZER LOGIN TRADICIONAL
-        with tab_login:
-            st.markdown("<p style='color:#f8fafc; font-weight:600;'>Acesse com seu e-mail e senha cadastrados:</p>", unsafe_allow_html=True)
-            log_email = st.text_input("E-mail", key="log_email")
-            log_senha = st.text_input("Senha", type="password", key="log_senha")
-
-            if st.button("🔑 Entrar", type="primary", use_container_width=True, key="btn_login_direct"):
-                if not log_email.strip() or not log_senha.strip():
-                    st.error("Preencha o e-mail e a senha.")
+        if st.button("🔑 Entrar", type="primary", use_container_width=True, key="btn_login_direct"):
+            if not log_email.strip() or not log_senha.strip():
+                st.error("Preencha o e-mail e a senha.")
+            else:
+                user_obj, msg = db.autenticar_usuario(log_email, log_senha)
+                if user_obj:
+                    st.session_state["user"] = user_obj
+                    st.success(f"Bem-vindo(a) de volta, {user_obj['nome']}!")
+                    st.rerun()
                 else:
-                    user_obj, msg = db.autenticar_usuario(log_email, log_senha)
+                    st.error(msg)
+
+    # TAB 2: CRIAR CONTA TRADICIONAL
+    with tab_tradicional:
+        st.markdown("<p style='color:#f8fafc; font-weight:600;'>Preencha os campos abaixo para criar sua conta:</p>", unsafe_allow_html=True)
+        reg_nome = st.text_input("Nome", key="reg_nome")
+        reg_sobrenome = st.text_input("Sobrenome", key="reg_sobrenome")
+        reg_email = st.text_input("E-mail", key="reg_email")
+        reg_senha = st.text_input("Senha", type="password", key="reg_senha")
+        reg_conf_senha = st.text_input("Confirmação de Senha", type="password", key="reg_conf_senha")
+
+        # Feedback de validação visual de confirmação de senha em tempo real
+        if reg_conf_senha:
+            if reg_senha == reg_conf_senha:
+                st.markdown("<p style='color:#4ade80; font-size:0.85rem; font-weight:600;'>✅ As senhas coincidem.</p>", unsafe_allow_html=True)
+            else:
+                st.markdown("<p style='color:#fca5a5; font-size:0.85rem; font-weight:600;'>❌ As senhas não coincidem.</p>", unsafe_allow_html=True)
+
+        if st.button("✨ Criar Conta", type="primary", use_container_width=True, key="btn_reg_direct"):
+            if not (reg_nome.strip() and reg_sobrenome.strip() and reg_email.strip() and reg_senha.strip() and reg_conf_senha.strip()):
+                st.error("Por favor, preencha todos os campos do formulário.")
+            elif reg_senha != reg_conf_senha:
+                st.error("As senhas digitadas não coincidem. Verifique e tente novamente.")
+            elif len(reg_senha) < 4:
+                st.error("A senha deve conter no mínimo 4 caracteres.")
+            else:
+                ok, msg = db.registrar_usuario(reg_nome, reg_sobrenome, reg_email, reg_senha)
+                if ok:
+                    user_obj, _ = db.autenticar_usuario(reg_email, reg_senha)
                     if user_obj:
                         st.session_state["user"] = user_obj
-                        st.success(f"Bem-vindo(a) de volta, {user_obj['nome']}!")
+                        st.success(f"Conta criada com sucesso! Bem-vindo(a), {user_obj['nome']}!")
                         st.rerun()
                     else:
-                        st.error(msg)
-
-        # TAB 2: CRIAR CONTA TRADICIONAL
-        with tab_tradicional:
-            st.markdown("<p style='color:#f8fafc; font-weight:600;'>Preencha os campos abaixo para criar sua conta:</p>", unsafe_allow_html=True)
-            reg_nome = st.text_input("Nome", key="reg_nome")
-            reg_sobrenome = st.text_input("Sobrenome", key="reg_sobrenome")
-            reg_email = st.text_input("E-mail", key="reg_email")
-            reg_senha = st.text_input("Senha", type="password", key="reg_senha")
-            reg_conf_senha = st.text_input("Confirmação de Senha", type="password", key="reg_conf_senha")
-
-            # Feedback de validação visual de confirmação de senha em tempo real
-            if reg_conf_senha:
-                if reg_senha == reg_conf_senha:
-                    st.markdown("<p style='color:#4ade80; font-size:0.85rem; font-weight:600;'>✅ As senhas coincidem.</p>", unsafe_allow_html=True)
+                        st.success("Conta criada com sucesso! Faça login para continuar.")
                 else:
-                    st.markdown("<p style='color:#fca5a5; font-size:0.85rem; font-weight:600;'>❌ As senhas não coincidem.</p>", unsafe_allow_html=True)
-
-            if st.button("✨ Criar Conta", type="primary", use_container_width=True, key="btn_reg_direct"):
-                if not (reg_nome.strip() and reg_sobrenome.strip() and reg_email.strip() and reg_senha.strip() and reg_conf_senha.strip()):
-                    st.error("Por favor, preencha todos os campos do formulário.")
-                elif reg_senha != reg_conf_senha:
-                    st.error("As senhas digitadas não coincidem. Verifique e tente novamente.")
-                elif len(reg_senha) < 4:
-                    st.error("A senha deve conter no mínimo 4 caracteres.")
-                else:
-                    ok, msg = db.registrar_usuario(reg_nome, reg_sobrenome, reg_email, reg_senha)
-                    if ok:
-                        user_obj, _ = db.autenticar_usuario(reg_email, reg_senha)
-                        if user_obj:
-                            st.session_state["user"] = user_obj
-                            st.success(f"Conta criada com sucesso! Bem-vindo(a), {user_obj['nome']}!")
-                            st.rerun()
-                        else:
-                            st.success("Conta criada com sucesso! Faça login para continuar.")
-                    else:
-                        st.error(msg)
+                    st.error(msg)
 
     st.stop()
 
