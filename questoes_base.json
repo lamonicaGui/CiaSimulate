@@ -16,7 +16,8 @@
         "C": "Incorreta: Auxiliar na contratação direta da equipe não é um papel apropriado para o conselho, embora o conselho deva aprovar decisões relativas à nomeação e destituição do CAE.",
         "D": "Incorreta: Embora a coordenação entre auditores internos e externos seja incentivada, isso não promoveria diretamente a independência organizacional."
       },
-      "secao": "Seção A: Planejamento do Trabalho (50%)"
+      "secao": "Seção A: Planejamento do Trabalho (50%)",
+      "nivel": "Fácil"
     },
     {
       "id": 2,
@@ -34,7 +35,8 @@
         "C": "Incorreta: Auxiliar a administração na avaliação de riscos complexos de TI e estratégias de mitigação pode exceder as habilidades ou conhecimentos da função. Além disso, determinar e implementar estratégias é responsabilidade da gestão.",
         "D": "Correta: O papel da auditoria interna é avaliar se as atividades de governança, incluindo a governança de TI, estão alinhadas com o apetite ao risco da organização e consideram os riscos emergentes."
       },
-      "secao": "Seção A: Planejamento do Trabalho (50%)"
+      "secao": "Seção A: Planejamento do Trabalho (50%)",
+      "nivel": "Intermediário"
     },
     {
       "id": 3,
@@ -52,7 +54,8 @@
         "C": "Incorreta: O conselho de administração realiza a supervisão e estabelece a estrutura geral de gerenciamento de riscos.",
         "D": "Incorreta: O ambiente de controle reflete a atitude coletiva prevalecente em uma organização e é levado em consideração quando uma técnica de controle é recomendada."
       },
-      "secao": "Seção A: Planejamento do Trabalho (50%)"
+      "secao": "Seção A: Planejamento do Trabalho (50%)",
+      "nivel": "Fácil"
     },
     {
       "id": 4,
@@ -70,7 +73,8 @@
         "C": "Incorreta: Desenvolver e implementar estratégias financeiras é função da gestão financeira.",
         "D": "Correta: As Normas Globais de Auditoria Interna enfatizam o papel duplo em fornecer avaliação independente e serviços de consultoria valiosos para melhorar a governança, riscos e controles."
       },
-      "secao": "Seção A: Planejamento do Trabalho (50%)"
+      "secao": "Seção A: Planejamento do Trabalho (50%)",
+      "nivel": "Fácil"
     },
     {
       "id": 5,
@@ -88,7 +92,8 @@
         "C": "Incorreta: Ter acesso irrestrito promove a independência e eficácia da auditoria.",
         "D": "Incorreta: É apropriado que o CAE avalie a equipe. O reporte administrativo ao CFO não prejudica a independência se o reporte funcional for ao Conselho."
       },
-      "secao": "Seção A: Planejamento do Trabalho (50%)"
+      "secao": "Seção A: Planejamento do Trabalho (50%)",
+      "nivel": "Difícil"
     },
     {
       "id": 6,
@@ -106,7 +111,8 @@
         "C": "Incorreta: A opinião do funcionário é relevante para o tema, mas a relevância por si só não substitui a quantidade/suficiência.",
         "D": "Incorreta: A informação é útil, mas a falha principal na fundamentação da conclusão do auditor é a falta de evidências suficientes."
       },
-      "secao": "Seção B: Coleta, Análise e Avaliação de Informações (40%)"
+      "secao": "Seção B: Coleta, Análise e Avaliação de Informações (40%)",
+      "nivel": "Intermediário"
     },
     {
       "id": 7,
@@ -124,7 +130,8 @@
         "C": "Correta: De acordo com o IIA, os papéis de trabalho devem ser claros e autoexplicativos a ponto de permitir que outro auditor interno prudente e qualificado, que não participou do trabalho, os entenda e refaça a análise se necessário.",
         "D": "Incorreta: Embora terceiros possam revisá-los, o padrão oficial de elaboração é a compreensibilidade para outro auditor interno não envolvido."
       },
-      "secao": "Seção B: Coleta, Análise e Avaliação de Informações (40%)"
+      "secao": "Seção B: Coleta, Análise e Avaliação de Informações (40%)",
+      "nivel": "Fácil"
     },
     {
       "id": 8,
@@ -142,7 +149,8 @@
         "C": "Incorreta: O CAE não precisa assinar cada nota de revisão individual.",
         "D": "Incorreta: As notas de revisão descartáveis não precisam ser mantidas permanentemente na pasta final auditada se a evidência final ajustada for conclusiva."
       },
-      "secao": "Seção B: Coleta, Análise e Avaliação de Informações (40%)"
+      "secao": "Seção B: Coleta, Análise e Avaliação de Informações (40%)",
+      "nivel": "Difícil"
     },
     {
       "id": 9,
@@ -160,7 +168,8 @@
         "C": "Incorreta: A cibersegurança protege ativos, mas não garante por si só o sucesso mercadológico ou financeiro da empresa.",
         "D": "Correta: Ativos de informação valiosos e processos de negócios críticos representam maior atratividade para ameaças cibernéticas, elevando o perfil de risco do engajamento."
       },
-      "secao": "Seção A: Planejamento do Trabalho (50%)"
+      "secao": "Seção A: Planejamento do Trabalho (50%)",
+      "nivel": "Fácil"
     },
     {
       "id": 10,
@@ -178,7 +187,8 @@
         "C": "Correta: O CAE deve exercer julgamento profissional para estabelecer a frequência e a metodologia de monitoramento do acompanhamento das observações e planos de ação.",
         "D": "Incorreta: Nem todas as observações insignificantes exigem acompanhamento formal contínuo; o CAE prioriza com base no risco."
       },
-      "secao": "Seção C: Supervisão e Comunicação (10%)"
+      "secao": "Seção C: Supervisão e Comunicação (10%)",
+      "nivel": "Intermediário"
     }
   ]
 }

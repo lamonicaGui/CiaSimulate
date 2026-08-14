@@ -196,21 +196,35 @@ def salvar_tentativa(email, tipo_simulado, secao, acertos, total, aproveitamento
     with open(FILE_PROGRESSO, "w", encoding="utf-8") as f:
         json.dump(history, f, ensure_ascii=False, indent=2)
 
-def carregar_historico_usuario(email):
-    email_clean = email.strip().lower()
+def get_user_progress(email):
     sb = get_supabase()
     if sb:
         try:
-            res = sb.table('progresso').select('*').eq('usuario_email', email_clean).execute()
+            res = sb.table("progresso").select("*").eq("usuario_email", email).order("data_hora", desc=True).execute()
             if res.data is not None:
                 return res.data
         except Exception:
             pass
-            
-    init_local_files()
-    with open(FILE_PROGRESSO, "r", encoding="utf-8") as f:
-        history = json.load(f)
-    return [h for h in history if h.get("usuario_email", "").lower() == email_clean]
+
+    if os.path.exists(FILE_PROGRESSO):
+        with open(FILE_PROGRESSO, "r", encoding="utf-8") as f:
+            try:
+                todos = json.load(f)
+                return [p for p in todos if p.get("usuario_email") == email]
+            except Exception:
+                return []
+    return []
+
+def get_user_errored_question_ids(email):
+    """ Retorna a lista de IDs de questões que o usuário já errou em simulados anteriores. """
+    progressos = get_user_progress(email)
+    questoes_erradas = set()
+    for p in progressos:
+        detalhes = p.get("detalhes_respostas", [])
+        for item in detalhes:
+            if not item.get("acertou", False):
+                questoes_erradas.add(item.get("questao_id"))
+    return list(questoes_erradas)
 
 def salvar_novas_questoes(questoes_list):
     sb = get_supabase()

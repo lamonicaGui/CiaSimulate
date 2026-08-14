@@ -367,45 +367,118 @@ if opcao_menu == "🎯 Ir Direto para o Simulado":
     """, unsafe_allow_html=True)
 
     all_questoes = db.load_questoes()
+    user_email = st.session_state["user"]["email"] if st.session_state.get("user") else ""
+    questoes_erradas_ids = db.get_user_errored_question_ids(user_email) if user_email else []
 
     if not st.session_state["simulado_ativo"]:
         st.subheader("🎯 Configurar Novo Simulado")
-        col_sec, col_q = st.columns([2, 1])
-        
+
+        # Opções de filtro por nível ou modo de reforço
+        opcoes_filtro = ["Todas as Dificuldades", "Fáceis", "Intermediárias", "Difíceis"]
+        if questoes_erradas_ids:
+            opcoes_filtro.append("⚠️ Apenas Questões que Errei (Modo Reforço)")
+
+        col_sec, col_dificuldade, col_q = st.columns([2, 2, 1])
+
         with col_sec:
             secao_opt = st.selectbox(
                 "Selecione o Conteúdo Programático:",
                 [
-                    "Todas as Seções (Simulado Completo Parte 2)",
+                    "Todas as Seções (Simulado Completo Parte 2 - 100 Qs)",
                     "Seção A: Planejamento do Trabalho (50%)",
                     "Seção B: Coleta, Análise e Avaliação de Informações (40%)",
                     "Seção C: Supervisão e Comunicação (10%)"
                 ]
             )
-            
+
+        with col_dificuldade:
+            filtro_dificuldade = st.selectbox(
+                "Nível de Dificuldade ou Modo:",
+                opcoes_filtro
+            )
+
+        is_completo = "Todas as Seções" in secao_opt
+
         with col_q:
-            num_q = st.number_input("Número de Questões", min_value=1, max_value=max(1, len(all_questoes)), value=min(10, len(all_questoes)))
+            if is_completo and "Errei" not in filtro_dificuldade:
+                num_q = st.number_input("Número de Questões", min_value=1, max_value=max(100, len(all_questoes)), value=min(100, max(10, len(all_questoes))), disabled=True, help="O Simulado Completo Oficial possui 100 questões divididas proporcionalmente.")
+            else:
+                max_val = len(questoes_erradas_ids) if "Errei" in filtro_dificuldade else len(all_questoes)
+                num_q = st.number_input("Número de Questões", min_value=1, max_value=max(1, max_val), value=min(10, max(1, max_val)))
+
+        if "Errei" in filtro_dificuldade:
+            st.info(f"💡 Você possui **{len(questoes_erradas_ids)}** questão(ões) registradas que errou em simulados anteriores.")
 
         if st.button("🚀 Iniciar Simulado Agora", type="primary", use_container_width=True):
-            if "Todas" in secao_opt:
-                filtradas = all_questoes
-            else:
-                filtradas = [q for q in all_questoes if q.get("secao", "").startswith(secao_opt.split(":")[0])]
-                if not filtradas:
-                    filtradas = all_questoes
-
             import random
-            selecionadas = filtradas.copy()
-            random.shuffle(selecionadas)
-            selecionadas = selecionadas[:num_q]
 
-            st.session_state["questoes_simulado"] = selecionadas
-            st.session_state["indice_questao"] = 0
-            st.session_state["respostas_usuario"] = {}
-            st.session_state["simulado_ativo"] = True
-            st.session_state["modo_finalizado"] = False
-            st.session_state["secao_selecionada"] = secao_opt
-            st.rerun()
+            # 1. Aplicar filtro inicial (Dificuldade ou Questões Erradas)
+            base_pool = all_questoes.copy()
+            if "Errei" in filtro_dificuldade:
+                base_pool = [q for q in base_pool if q["id"] in questoes_erradas_ids]
+            elif filtro_dificuldade != "Todas as Dificuldades":
+                # Normalização de rótulos (Fáceis -> Fácil, Intermediárias -> Intermediário, Difíceis -> Difícil)
+                map_nivel = {"Fáceis": "Fácil", "Intermediárias": "Intermediário", "Difíceis": "Difícil"}
+                target_nivel = map_nivel.get(filtro_dificuldade, filtro_dificuldade)
+                filtradas_nivel = [q for q in base_pool if q.get("nivel", "") == target_nivel]
+                if filtradas_nivel:
+                    base_pool = filtradas_nivel
+
+            # 2. Lógica para Simulado Completo Oficial (100 questões com proporção 50% A, 40% B, 10% C)
+            if is_completo and "Errei" not in filtro_dificuldade:
+                pool_a = [q for q in base_pool if q.get("secao", "").startswith("Seção A")]
+                pool_b = [q for q in base_pool if q.get("secao", "").startswith("Seção B")]
+                pool_c = [q for q in base_pool if q.get("secao", "").startswith("Seção C")]
+
+                random.shuffle(pool_a)
+                random.shuffle(pool_b)
+                random.shuffle(pool_c)
+
+                # Proporção ideal para 100 questões: 50 de A, 40 de B, 10 de C
+                # Caso a base de dados ainda não tenha 100 questões, distribuímos proporcionalmente ao total disponível
+                qtd_total = min(100, len(base_pool))
+                target_a = int(round(qtd_total * 0.50))
+                target_b = int(round(qtd_total * 0.40))
+                target_c = qtd_total - target_a - target_b
+
+                sel_a = pool_a[:target_a]
+                sel_b = pool_b[:target_b]
+                sel_c = pool_c[:target_c]
+
+                selecionadas = sel_a + sel_b + sel_c
+                # Preencher com questões restantes da base se alguma seção tiver poucas questões
+                if len(selecionadas) < qtd_total:
+                    usados_ids = {q["id"] for q in selecionadas}
+                    restantes = [q for q in base_pool if q["id"] not in usados_ids]
+                    random.shuffle(restantes)
+                    selecionadas.extend(restantes[:qtd_total - len(selecionadas)])
+
+                random.shuffle(selecionadas)
+
+            else:
+                # Simulado por Seção Específica ou Modo Erros
+                if is_completo:
+                    filtradas = base_pool
+                else:
+                    secao_prefix = secao_opt.split(":")[0]
+                    filtradas = [q for q in base_pool if q.get("secao", "").startswith(secao_prefix)]
+                    if not filtradas:
+                        filtradas = base_pool
+
+                selecionadas = filtradas.copy()
+                random.shuffle(selecionadas)
+                selecionadas = selecionadas[:num_q]
+
+            if not selecionadas:
+                st.warning("Nenhuma questão encontrada para os filtros selecionados. Tente ajustar a dificuldade ou seção.")
+            else:
+                st.session_state["questoes_simulado"] = selecionadas
+                st.session_state["indice_questao"] = 0
+                st.session_state["respostas_usuario"] = {}
+                st.session_state["simulado_ativo"] = True
+                st.session_state["modo_finalizado"] = False
+                st.session_state["secao_selecionada"] = f"{secao_opt} ({filtro_dificuldade})"
+                st.rerun()
 
     else:
         questoes = st.session_state["questoes_simulado"]
