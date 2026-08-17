@@ -346,16 +346,21 @@ st.markdown("""
         font-family: 'Plus Jakarta Sans', 'Inter', sans-serif !important;
     }
 
-    /* Estilização para o menu recolhido (Icon-Only SVG Mode) */
+    /* Estilização para o menu recolhido (Sidebar Retrátil Visível) */
     [data-testid="stSidebar"][aria-expanded="false"],
     section[data-testid="stSidebar"][aria-expanded="false"] {
-        min-width: 80px !important;
-        max-width: 80px !important;
+        margin-left: 0 !important;
+        transform: none !important;
+        min-width: 75px !important;
+        max-width: 75px !important;
+        width: 75px !important;
+        visibility: visible !important;
+        display: block !important;
     }
 
     [data-testid="stSidebar"][aria-expanded="false"] .user-profile-card,
     [data-testid="stSidebar"][aria-expanded="false"] .sidebar-app-title,
-    [data-testid="stSidebar"][aria-expanded="false"] .stMarkdown,
+    [data-testid="stSidebar"][aria-expanded="false"] p,
     [data-testid="stSidebar"][aria-expanded="false"] h1,
     [data-testid="stSidebar"][aria-expanded="false"] h2,
     [data-testid="stSidebar"][aria-expanded="false"] h3,
@@ -364,10 +369,40 @@ st.markdown("""
         display: none !important;
     }
 
-    /* Esconder o radio label no menu recolhido mantendo os itens alinhados */
+    /* Exibir os itens do radio group como ícones centralizados quando recolhido */
+    [data-testid="stSidebar"][aria-expanded="false"] div[role="radiogroup"] {
+        padding-top: 1rem !important;
+    }
+
     [data-testid="stSidebar"][aria-expanded="false"] div[role="radiogroup"] label {
         justify-content: center !important;
-        padding: 12px 0 !important;
+        padding: 10px 0 !important;
+        margin: 6px 0 !important;
+        border-radius: 10px !important;
+        background: rgba(2, 132, 199, 0.08) !important;
+    }
+
+    /* Inserir ícones explicativos via CSS nos botões do rádio quando recolhido */
+    [data-testid="stSidebar"][aria-expanded="false"] div[role="radiogroup"] label:nth-child(1)::after {
+        content: "🎯" !important;
+        font-size: 1.4rem !important;
+        display: block !important;
+    }
+
+    [data-testid="stSidebar"][aria-expanded="false"] div[role="radiogroup"] label:nth-child(2)::after {
+        content: "📊" !important;
+        font-size: 1.4rem !important;
+        display: block !important;
+    }
+
+    [data-testid="stSidebar"][aria-expanded="false"] div[role="radiogroup"] label:nth-child(3)::after {
+        content: "📜" !important;
+        font-size: 1.4rem !important;
+        display: block !important;
+    }
+
+    [data-testid="stSidebar"][aria-expanded="false"] div[role="radiogroup"] label > div:nth-child(2) {
+        display: none !important;
     }
 
     /* Respeito às preferências de movimento do usuário (A11y) */
