@@ -334,28 +334,27 @@ st.markdown("""
         color: #fca5a5;
     }
 
-    /* Sidebar Readability (Light Sidebar Background) */
+    /* Sidebar Readability (Light Sidebar Background) & SVG Icon Patterns */
     [data-testid="stSidebar"] {
         background-color: #f8fafc !important;
         border-right: 1px solid #e2e8f0 !important;
+        font-family: 'Plus Jakarta Sans', 'Inter', sans-serif !important;
     }
     
     [data-testid="stSidebar"] *, [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label {
         color: #0f172a !important;
+        font-family: 'Plus Jakarta Sans', 'Inter', sans-serif !important;
     }
 
-    /* Estilização para o menu recolhido (Icon-Only Mode) */
+    /* Estilização para o menu recolhido (Icon-Only SVG Mode) */
     [data-testid="stSidebar"][aria-expanded="false"],
     section[data-testid="stSidebar"][aria-expanded="false"] {
         min-width: 80px !important;
         max-width: 80px !important;
     }
 
-    [data-testid="stSidebar"][aria-expanded="false"] div[role="radiogroup"] label p {
-        font-size: 1.5rem !important;
-        text-align: center !important;
-    }
-
+    [data-testid="stSidebar"][aria-expanded="false"] .user-profile-card,
+    [data-testid="stSidebar"][aria-expanded="false"] .sidebar-app-title,
     [data-testid="stSidebar"][aria-expanded="false"] .stMarkdown,
     [data-testid="stSidebar"][aria-expanded="false"] h1,
     [data-testid="stSidebar"][aria-expanded="false"] h2,
@@ -363,6 +362,12 @@ st.markdown("""
     [data-testid="stSidebar"][aria-expanded="false"] hr,
     [data-testid="stSidebar"][aria-expanded="false"] .stAlert {
         display: none !important;
+    }
+
+    /* Esconder o radio label no menu recolhido mantendo os itens alinhados */
+    [data-testid="stSidebar"][aria-expanded="false"] div[role="radiogroup"] label {
+        justify-content: center !important;
+        padding: 12px 0 !important;
     }
 
     /* Respeito às preferências de movimento do usuário (A11y) */
@@ -544,21 +549,46 @@ if not st.session_state["user"]:
 user_cur = st.session_state["user"]
 
 with st.sidebar:
-    st.image("https://img.icons8.com/isometric/100/shield-with-signature.png", width=60)
-    st.title("Simulador CIA")
-    sobrenome_str = f" {user_cur.get('sobrenome', '')}" if user_cur.get('sobrenome') else ""
-    st.success(f"👤 **{user_cur['nome']}{sobrenome_str}**\n\n📧 `{user_cur['email']}`")
-    st.divider()
+    # Header da Sidebar sem imagens quebradas e no padrão visual do sistema
+    st.markdown("""
+    <div class="sidebar-app-title" style="display:flex; align-items:center; gap:12px; margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:1px solid #e2e8f0;">
+        <div style="width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg, #0284c7 0%, #4f46e5 100%); display:flex; align-items:center; justify-content:center; color:#ffffff; font-weight:800; font-size:1.2rem;">
+            🛡️
+        </div>
+        <div>
+            <div style="font-size:1.1rem; font-weight:800; color:#0f172a; line-height:1.2;">Simulador CIA</div>
+            <div style="font-size:0.75rem; color:#64748b; font-weight:600;">Normas IIA V2025</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
-    st.subheader("📌 Navegação")
+    # Perfil do Usuário com avatar vetorial SVG profissional
+    sobrenome_str = f" {user_cur.get('sobrenome', '')}" if user_cur.get('sobrenome') else ""
+    iniciais = f"{user_cur['nome'][0]}{user_cur.get('sobrenome', ' ')[0]}".upper()
+    
+    st.markdown(f"""
+    <div class="user-profile-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:14px; padding:1rem; margin-bottom:1.25rem; display:flex; align-items:center; gap:12px; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+        <div style="width:42px; height:42px; border-radius:50%; background:linear-gradient(135deg, #38bdf8 0%, #0284c7 100%); color:#ffffff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.95rem;">
+            {iniciais}
+        </div>
+        <div style="overflow:hidden;">
+            <div style="font-size:0.95rem; font-weight:700; color:#0f172a; text-overflow:ellipsis; overflow:hidden; whitespace:nowrap;">{user_cur['nome']}{sobrenome_str}</div>
+            <div style="font-size:0.75rem; color:#64748b; text-overflow:ellipsis; overflow:hidden; whitespace:nowrap;">{user_cur['email']}</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("<p style='font-size:0.8rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.5rem;'>Navegação Principal</p>", unsafe_allow_html=True)
+    
     opcao_menu = st.radio(
-        "Selecione uma opção:",
+        "Navegação:",
         [
-            "🎯 Simulados", 
-            "📊 Progresso", 
-            "📜 Instruções"
+            "Simulados", 
+            "Progresso", 
+            "Instruções"
         ],
-        key="nav_radio"
+        key="nav_radio",
+        label_visibility="collapsed"
     )
 
     st.divider()
@@ -568,7 +598,7 @@ with st.sidebar:
         st.rerun()
 
 # --- PÁGINA 1: SIMULADOS ---
-if opcao_menu == "🎯 Simulados":
+if opcao_menu == "Simulados":
     st.markdown("""
     <div class="header-card">
         <h1 class="header-title">Simulado de Auditoria Interna (CIA Parte 2)</h1>
@@ -849,7 +879,7 @@ if opcao_menu == "🎯 Simulados":
                         st.rerun()
 
 # --- PÁGINA 2: PROGRESSO ---
-elif opcao_menu == "📊 Progresso":
+elif opcao_menu == "Progresso":
     st.markdown("""
     <div class="header-card">
         <h1 class="header-title">Dashboard de Progresso e Resultados</h1>
@@ -860,55 +890,60 @@ elif opcao_menu == "📊 Progresso":
     hist = db.get_user_progress(user_cur["email"])
 
     if not hist:
-        st.info("Nenhum histórico de simulado encontrado para este usuário. Realize seu primeiro simulado na opção 'Simulados'!")
+        total_tentativas = 0
+        total_q_respondidas = 0
+        total_acertos = 0
+        media_aproveitamento = 0.0
     else:
         df = pd.DataFrame(hist)
-        
         total_tentativas = len(df)
-        total_q_respondidas = df["total_questoes"].sum()
-        total_acertos = df["acertos"].sum()
-        media_aproveitamento = df["aproveitamento_pct"].mean()
+        total_q_respondidas = df["total_questoes"].sum() if "total_questoes" in df.columns else 0
+        total_acertos = df["acertos"].sum() if "acertos" in df.columns else 0
+        media_aproveitamento = df["aproveitamento_pct"].mean() if "aproveitamento_pct" in df.columns else 0.0
 
-        # Exibição em Bento Grid EdTech 2026
-        st.markdown(f"""
-        <div class="bento-grid">
-            <div class="bento-card">
-                <div class="bento-card-header">
-                    <span class="bento-card-title">Simulados Concluídos</span>
-                    <span class="bento-card-badge" style="background:rgba(56,189,248,0.2); color:#38bdf8;">🎯 ATIVIDADE</span>
-                </div>
-                <div class="bento-card-value">{total_tentativas}</div>
-                <div style="font-size:0.8rem; color:#94a3b8; margin-top:0.4rem;">Sessões registradas no banco</div>
+    # Exibição do Bento Grid com valores zerados ou calculados sem erro
+    st.markdown(f"""
+    <div class="bento-grid">
+        <div class="bento-card">
+            <div class="bento-card-header">
+                <span class="bento-card-title">Simulados Concluídos</span>
+                <span class="bento-card-badge" style="background:rgba(56,189,248,0.2); color:#38bdf8;">🎯 ATIVIDADE</span>
             </div>
-            <div class="bento-card">
-                <div class="bento-card-header">
-                    <span class="bento-card-title">Questões Respondidas</span>
-                    <span class="bento-card-badge" style="background:rgba(99,102,241,0.2); color:#818cf8;">📚 VOLUME</span>
-                </div>
-                <div class="bento-card-value">{total_q_respondidas}</div>
-                <div style="font-size:0.8rem; color:#94a3b8; margin-top:0.4rem;">Itens situacionais processados</div>
-            </div>
-            <div class="bento-card">
-                <div class="bento-card-header">
-                    <span class="bento-card-title">Total de Acertos</span>
-                    <span class="bento-card-badge" style="background:rgba(16,185,129,0.2); color:#10b981;">✅ PRECISÃO</span>
-                </div>
-                <div class="bento-card-value">{total_acertos}</div>
-                <div style="font-size:0.8rem; color:#94a3b8; margin-top:0.4rem;">Respostas corretas confirmadas</div>
-            </div>
-            <div class="bento-card">
-                <div class="bento-card-header">
-                    <span class="bento-card-title">Média de Aproveitamento</span>
-                    <span class="bento-card-badge" style="background:rgba(245,158,11,0.2); color:#f59e0b;">📊 DESEMPENHO</span>
-                </div>
-                <div class="bento-card-value">{media_aproveitamento:.1f}%</div>
-                <div style="font-size:0.8rem; color:#94a3b8; margin-top:0.4rem;">Meta recomendada IIA: ≥ 75%</div>
-            </div>
+            <div class="bento-card-value">{total_tentativas}</div>
+            <div style="font-size:0.8rem; color:#94a3b8; margin-top:0.4rem;">Sessões registradas no banco</div>
         </div>
-        """, unsafe_allow_html=True)
+        <div class="bento-card">
+            <div class="bento-card-header">
+                <span class="bento-card-title">Questões Respondidas</span>
+                <span class="bento-card-badge" style="background:rgba(99,102,241,0.2); color:#818cf8;">📚 VOLUME</span>
+            </div>
+            <div class="bento-card-value">{total_q_respondidas}</div>
+            <div style="font-size:0.8rem; color:#94a3b8; margin-top:0.4rem;">Itens situacionais processados</div>
+        </div>
+        <div class="bento-card">
+            <div class="bento-card-header">
+                <span class="bento-card-title">Total de Acertos</span>
+                <span class="bento-card-badge" style="background:rgba(16,185,129,0.2); color:#10b981;">✅ PRECISÃO</span>
+            </div>
+            <div class="bento-card-value">{total_acertos}</div>
+            <div style="font-size:0.8rem; color:#94a3b8; margin-top:0.4rem;">Respostas corretas confirmadas</div>
+        </div>
+        <div class="bento-card">
+            <div class="bento-card-header">
+                <span class="bento-card-title">Média de Aproveitamento</span>
+                <span class="bento-card-badge" style="background:rgba(245,158,11,0.2); color:#f59e0b;">📊 DESEMPENHO</span>
+            </div>
+            <div class="bento-card-value">{media_aproveitamento:.1f}%</div>
+            <div style="font-size:0.8rem; color:#94a3b8; margin-top:0.4rem;">Meta recomendada IIA: ≥ 75%</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
-        st.divider()
+    st.divider()
 
+    if not hist:
+        st.info("💡 Nenhum histórico de simulado encontrado ainda para este usuário. Ao concluir seu primeiro simulado na aba 'Simulados', suas estatísticas detalhadas e gráficos serão atualizados aqui automaticamente.")
+    else:
         st.subheader("📜 Histórico de Tentativas")
         df_display = df[["data_hora", "tipo_simulado", "acertos", "total_questoes", "aproveitamento_pct"]].copy()
         df_display.columns = ["Data / Hora", "Tipo / Seção", "Acertos", "Total Questões", "Aproveitamento (%)"]
@@ -920,7 +955,7 @@ elif opcao_menu == "📊 Progresso":
         st.line_chart(df.set_index("data_hora")["aproveitamento_pct"])
 
 # --- PÁGINA 3: INSTRUÇÕES ---
-elif opcao_menu == "📜 Instruções":
+elif opcao_menu == "Instruções":
     st.markdown("""
     <div class="header-card">
         <h1 class="header-title">Estrutura Programática Exame CIA Parte 2</h1>
