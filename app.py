@@ -234,16 +234,25 @@ st.markdown("""
         color: #0f172a !important;
     }
 
-    /* Radio items readability */
-    div[role="radiogroup"] label p {
-        color: #f8fafc !important;
-        font-size: 1rem !important;
-        font-weight: 500 !important;
+    /* Estilização para o menu recolhido (Icon-Only Mode) */
+    [data-testid="stSidebar"][aria-expanded="false"],
+    section[data-testid="stSidebar"][aria-expanded="false"] {
+        min-width: 80px !important;
+        max-width: 80px !important;
     }
-    
-    [data-testid="stSidebar"] div[role="radiogroup"] label p {
-        color: #0f172a !important;
-        font-weight: 600 !important;
+
+    [data-testid="stSidebar"][aria-expanded="false"] div[role="radiogroup"] label p {
+        font-size: 1.5rem !important;
+        text-align: center !important;
+    }
+
+    [data-testid="stSidebar"][aria-expanded="false"] .stMarkdown,
+    [data-testid="stSidebar"][aria-expanded="false"] h1,
+    [data-testid="stSidebar"][aria-expanded="false"] h2,
+    [data-testid="stSidebar"][aria-expanded="false"] h3,
+    [data-testid="stSidebar"][aria-expanded="false"] hr,
+    [data-testid="stSidebar"][aria-expanded="false"] .stAlert {
+        display: none !important;
     }
 
     /* ========================================================= */
@@ -404,9 +413,9 @@ with st.sidebar:
     opcao_menu = st.radio(
         "Selecione uma opção:",
         [
-            "🎯 Ir Direto para o Simulado", 
-            "📊 Dashboard de Progresso e Resultados", 
-            "📜 Instruções do Exame"
+            "🎯 Simulados", 
+            "📊 Progresso", 
+            "📜 Instruções"
         ],
         key="nav_radio"
     )
@@ -417,8 +426,8 @@ with st.sidebar:
         st.session_state["simulado_ativo"] = False
         st.rerun()
 
-# --- PÁGINA 1: RESOLVER SIMULADO ---
-if opcao_menu == "🎯 Ir Direto para o Simulado":
+# --- PÁGINA 1: SIMULADOS ---
+if opcao_menu == "🎯 Simulados":
     st.markdown("""
     <div class="header-card">
         <h1 class="header-title">Simulado de Auditoria Interna (CIA Parte 2)</h1>
@@ -698,8 +707,8 @@ if opcao_menu == "🎯 Ir Direto para o Simulado":
                         st.session_state["modo_finalizado"] = True
                         st.rerun()
 
-# --- PÁGINA 2: DASHBOARD DE PROGRESSO E RESULTADOS ---
-elif opcao_menu == "📊 Dashboard de Progresso e Resultados":
+# --- PÁGINA 2: PROGRESSO ---
+elif opcao_menu == "📊 Progresso":
     st.markdown("""
     <div class="header-card">
         <h1 class="header-title">Dashboard de Progresso e Resultados</h1>
@@ -710,7 +719,7 @@ elif opcao_menu == "📊 Dashboard de Progresso e Resultados":
     hist = db.carregar_historico_usuario(user_cur["email"])
 
     if not hist:
-        st.info("Nenhum histórico de simulado encontrado para este usuário. Realize seu primeiro simulado na opção 'Ir Direto para o Simulado'!")
+        st.info("Nenhum histórico de simulado encontrado para este usuário. Realize seu primeiro simulado na opção 'Simulados'!")
     else:
         df = pd.DataFrame(hist)
         
@@ -741,8 +750,8 @@ elif opcao_menu == "📊 Dashboard de Progresso e Resultados":
         st.subheader("📈 Evolução dos Resultados")
         st.line_chart(df.set_index("data_hora")["aproveitamento_pct"])
 
-# --- PÁGINA 3: INSTRUÇÕES DO EXAME ---
-elif opcao_menu == "📜 Instruções do Exame":
+# --- PÁGINA 3: INSTRUÇÕES ---
+elif opcao_menu == "📜 Instruções":
     st.markdown("""
     <div class="header-card">
         <h1 class="header-title">Estrutura Programática Exame CIA Parte 2</h1>
