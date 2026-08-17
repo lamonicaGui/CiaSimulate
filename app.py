@@ -406,7 +406,6 @@ with st.sidebar:
         [
             "🎯 Ir Direto para o Simulado", 
             "📊 Dashboard de Progresso e Resultados", 
-            "🤖 Gerador de Questões JSON", 
             "📜 Instruções do Exame"
         ],
         key="nav_radio"
@@ -742,92 +741,7 @@ elif opcao_menu == "📊 Dashboard de Progresso e Resultados":
         st.subheader("📈 Evolução dos Resultados")
         st.line_chart(df.set_index("data_hora")["aproveitamento_pct"])
 
-# --- PÁGINA 3: GERADOR DE QUESTÕES JSON ---
-elif opcao_menu == "🤖 Gerador de Questões JSON":
-    st.markdown("""
-    <div class="header-card">
-        <h1 class="header-title">Gerador & Importador de Questões (JSON)</h1>
-        <p class="header-subtitle">Expanda o banco de dados infinito mantendo total fidelidade aos padrões oficiais IIA V2025.</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    tab_prompt, tab_import, tab_export = st.tabs(["📝 Prompt Mestre Oficial", "📥 Importar JSON", "📤 Exportar Banco Atual"])
-
-    with tab_prompt:
-        st.write("Copie o prompt abaixo e envie para o seu LLM preferido (ChatGPT, Claude, Gemini) para gerar novas questões no formato JSON padronizado:")
-        
-        prompt_text = """Você é um Engenheiro de Software Sênior especialista em EdTech e um autor credenciado de itens de teste para exames de certificação do IIA (Institute of Internal Auditors), com foco na certificação CIA (Certified Internal Auditor).
-
-Sua tarefa é gerar um lote de novas questões no formato estruturado JSON totalmente alinhadas às Normas Globais de Auditoria Interna (IIA V2025) e à Parte 2 do exame CIA.
-
-PADRÕES DE QUALIDADE:
-1. Abordagem Prática e Situacional: Cenários reais enfrentados pelo auditor interno ou Executivo Chefe de Auditoria (CAE).
-2. Quatro Alternativas: Exatamente 4 opções (A, B, C, D), com apenas uma correta de acordo com as Normas V2025.
-3. Distratores Plausíveis: Alternativas incorretas baseadas em equívocos práticos ou papéis de gestão.
-4. Explicações Abrangentes: Justificativa técnica detalhada para TODAS as 4 alternativas (por que a correta é verdadeira e por que as outras 3 estão incorretas).
-
-MAPEMENTO DAS SEÇÕES:
-- Seção A: Planejamento do Trabalho (50%)
-- Seção B: Coleta, Análise e Avaliação de Informações (40%)
-- Seção C: Supervisão e Comunicação do Trabalho de Auditoria (10%)
-
-FORMATO DE SAÍDA EXIGIDO (JSON):
-```json
-{
-  "questoes": [
-    {
-      "id": 11,
-      "texto": "[Cenário prático situacional de auditoria]",
-      "opcoes": {
-        "A": "[Alternativa A]",
-        "B": "[Alternativa B]",
-        "C": "[Alternativa C]",
-        "D": "[Alternativa D]"
-      },
-      "correta": "[Letra da correta: A, B, C ou D]",
-      "explicacoes": {
-        "A": "Incorreta/Correta: [Explicação técnica detalhada]",
-        "B": "Incorreta/Correta: [Explicação técnica detalhada]",
-        "C": "Incorreta/Correta: [Explicação técnica detalhada]",
-        "D": "Incorreta/Correta: [Explicação técnica detalhada]"
-      },
-      "secao": "[Seção A: Planejamento do Trabalho (50%), Seção B... ou Seção C...]"
-    }
-  ]
-}
-```"""
-        st.code(prompt_text, language="markdown")
-
-    with tab_import:
-        st.subheader("Importar Novas Questões JSON")
-        json_input = st.text_area("Cole aqui o bloco JSON gerado:", height=250, placeholder='{\n  "questoes": [...]\n}')
-        
-        if st.button("📥 Processar e Salvar no Banco de Dados", type="primary"):
-            try:
-                data = json.loads(json_input)
-                novas = data.get("questoes", [])
-                if not novas:
-                    st.error("Nenhuma questão encontrada na chave 'questoes'.")
-                else:
-                    db.salvar_novas_questoes(novas)
-                    st.success(f"✅ {len(novas)} questões processadas e salvas com sucesso no banco de dados!")
-            except Exception as e:
-                st.error(f"Erro ao validar código JSON: {e}")
-
-    with tab_export:
-        st.subheader("Exportar Banco de Dados Atual")
-        q_current = db.load_questoes()
-        st.write(f"Atualmente o banco possui **{len(q_current)}** questões cadastradas.")
-        
-        json_str = json.dumps({"questoes": q_current}, ensure_ascii=False, indent=2)
-        st.download_button(
-            label="💾 Baixar Banco de Questões (questoes.json)",
-            data=json_str,
-            file_name="questoes_cia_export.json",
-            mime="application/json"
-        )
-
-# --- PÁGINA 4: INSTRUÇÕES DO EXAME ---
+# --- PÁGINA 3: INSTRUÇÕES DO EXAME ---
 elif opcao_menu == "📜 Instruções do Exame":
     st.markdown("""
     <div class="header-card">
