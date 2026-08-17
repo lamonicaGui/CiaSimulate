@@ -10,53 +10,76 @@ st.set_page_config(
     initial_sidebar_state="expanded" if st.session_state.get("user") else "collapsed"
 )
 
-# Custom Styling (Dark Glassmorphism & High-Contrast Typography)
+# Custom Styling (EdTech 2026 Design Tokens, Modern Glassmorphism & High-Contrast Typography)
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    :root {
+        /* Design Tokens - Palette HSL / OKLCH Calibrated WCAG 2.2 AA/AAA */
+        --bg-gradient: linear-gradient(135deg, #0b1329 0%, #111c3a 50%, #1e293b 100%);
+        --card-bg: rgba(30, 41, 59, 0.75);
+        --card-border: rgba(255, 255, 255, 0.12);
+        --accent-cyan: #38bdf8;
+        --accent-blue: #0284c7;
+        --accent-indigo: #6366f1;
+        --accent-emerald: #10b981;
+        --text-primary: #f8fafc;
+        --text-secondary: #94a3b8;
+        --text-dark: #0f172a;
+        
+        /* Font Scale Clamp Tokens */
+        --font-h1: clamp(1.6rem, 4vw, 2.5rem);
+        --font-h2: clamp(1.3rem, 3vw, 1.8rem);
+        --font-body: clamp(0.9rem, 1.5vw, 1rem);
+    }
     
     html, body, [class*="css"] {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
     }
     
     .stApp {
-        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-        color: #f8fafc;
+        background: var(--bg-gradient);
+        color: var(--text-primary);
     }
 
-    /* Standardize Inputs & Placeholders for Maximum Legibility */
+    /* Standardize Inputs & Placeholders for Maximum Legibility & Focus States */
     .stTextInput > label, .stSelectbox > label, .stNumberInput > label, .stRadio > label {
-        color: #f8fafc !important;
+        color: var(--text-primary) !important;
         font-weight: 600 !important;
         font-size: 0.95rem !important;
+        letter-spacing: 0.01em;
     }
 
-    .stTextInput input {
-        background-color: #1e293b !important;
+    .stTextInput input, .stSelectbox select, .stNumberInput input {
+        background-color: rgba(15, 23, 42, 0.6) !important;
         color: #ffffff !important;
-        border: 1.5px solid #475569 !important;
-        border-radius: 8px !important;
+        border: 1.5px solid rgba(255, 255, 255, 0.18) !important;
+        border-radius: 10px !important;
         font-size: 1rem !important;
+        transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
     
-    .stTextInput input:focus {
-        border-color: #38bdf8 !important;
-        box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2) !important;
+    .stTextInput input:focus, .stSelectbox select:focus, .stNumberInput input:focus {
+        border-color: var(--accent-cyan) !important;
+        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25) !important;
+        outline: none !important;
     }
     
     .stTextInput input::placeholder {
-        color: #94a3b8 !important;
+        color: var(--text-secondary) !important;
     }
 
-    /* Universal Button Styling - High Contrast Visible Text & Background */
+    /* Universal Button Styling - High Contrast Visible Text & Smooth Microinteractions */
     .stButton > button, div.stButton > button {
-        background: linear-gradient(90deg, #0284c7 0%, #0369a1 100%) !important;
+        background: linear-gradient(135deg, #0284c7 0%, #4f46e5 100%) !important;
         color: #ffffff !important;
-        border: 1px solid #38bdf8 !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
         font-weight: 700 !important;
         font-size: 1.05rem !important;
-        box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4) !important;
-        border-radius: 8px !important;
+        box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35) !important;
+        border-radius: 10px !important;
+        transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease !important;
     }
     
     .stButton > button *, div.stButton > button * {
@@ -65,15 +88,21 @@ st.markdown("""
     }
     
     .stButton > button:hover, div.stButton > button:hover {
-        background: linear-gradient(90deg, #0369a1 0%, #075985 100%) !important;
+        background: linear-gradient(135deg, #0369a1 0%, #4338ca 100%) !important;
         color: #ffffff !important;
-        box-shadow: 0 6px 20px rgba(2, 132, 199, 0.6) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(2, 132, 199, 0.5) !important;
     }
 
-    /* Tabs Styling - High Contrast (Branco e Azul Ciano em Fundo Escuro) */
+    .stButton > button:focus-visible {
+        outline: 3px solid var(--accent-cyan) !important;
+        outline-offset: 2px !important;
+    }
+
+    /* Tabs Styling - Glassmorphism High Contrast */
     .stTabs [data-baseweb="tab-list"] {
-        background-color: rgba(15, 23, 42, 0.8) !important;
-        border-radius: 10px;
+        background-color: rgba(15, 23, 42, 0.75) !important;
+        border-radius: 12px;
         padding: 6px;
         border: 1px solid rgba(255, 255, 255, 0.15) !important;
         gap: 8px !important;
@@ -82,132 +111,212 @@ st.markdown("""
     .stTabs [data-baseweb="tab-list"] button {
         color: #cbd5e1 !important;
         font-weight: 700 !important;
-        font-size: 1.05rem !important;
-        padding: 10px 20px !important;
+        font-size: 1rem !important;
+        padding: 10px 18px !important;
         border-radius: 8px !important;
         background-color: transparent !important;
         border: none !important;
-    }
-    
-    .stTabs [data-baseweb="tab-list"] button p {
-        color: #cbd5e1 !important;
+        transition: all 180ms ease !important;
     }
 
     .stTabs [data-baseweb="tab-list"] button[aria-selected="true"] {
         color: #ffffff !important;
-        background-color: #0284c7 !important;
-        border-radius: 8px !important;
-    }
-
-    .stTabs [data-baseweb="tab-list"] button[aria-selected="true"] p {
-        color: #ffffff !important;
-    }
-
-    .stTabs [data-baseweb="tab-border-bar"] {
-        background-color: #0284c7 !important;
-    }
-
-    .stTabs [data-baseweb="tab-highlight"] {
-        background-color: #38bdf8 !important;
+        background: linear-gradient(135deg, #0284c7 0%, #3b82f6 100%) !important;
+        box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3) !important;
     }
     
-    /* Login Centered Container - Fluido e Responsivo */
-    .login-container {
+    /* Modern Split-Screen Login Container */
+    .split-login-wrapper {
+        display: flex;
+        flex-direction: row;
         width: 100%;
-        max-width: 550px;
-        margin: 1.5rem auto;
-        background: rgba(30, 41, 59, 0.85);
-        backdrop-filter: blur(16px);
+        max-width: 1040px;
+        margin: 2rem auto;
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(20px);
         border: 1px solid rgba(255, 255, 255, 0.15);
-        padding: 2rem 1.5rem;
-        border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-        box-sizing: border-box;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
     }
-    
-    .login-title {
-        font-size: clamp(1.5rem, 5vw, 2.2rem);
+
+    .split-hero-side {
+        flex: 1.1;
+        background: linear-gradient(135deg, rgba(2, 132, 199, 0.25) 0%, rgba(99, 102, 241, 0.3) 100%);
+        padding: 3rem 2.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .split-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        background: rgba(56, 189, 248, 0.15);
+        border: 1px solid rgba(56, 189, 248, 0.3);
+        border-radius: 30px;
+        color: #38bdf8;
+        font-size: 0.85rem;
         font-weight: 700;
-        text-align: center;
-        background: linear-gradient(90deg, #38bdf8, #818cf8);
+        width: fit-content;
+        margin-bottom: 1.5rem;
+    }
+
+    .split-hero-title {
+        font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+        font-weight: 800;
+        line-height: 1.2;
+        background: linear-gradient(90deg, #ffffff, #38bdf8, #818cf8);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        margin-bottom: 0.5rem;
-    }
-    
-    .login-subtitle {
-        text-align: center;
-        color: #cbd5e1;
-        font-size: clamp(0.85rem, 3vw, 1rem);
-        margin-bottom: 1.5rem;
-        line-height: 1.5;
+        margin-bottom: 1rem;
     }
 
-    /* Garantir que todos os containers principais fiquem limitados e centralizados */
-    [data-testid="stForm"], [data-testid="stVerticalBlock"] > div {
-        max-width: 100% !important;
+    .split-hero-subtitle {
+        color: #94a3b8;
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 2rem;
     }
 
-    /* Layout responsivo universal para formulários e elementos */
-    .stTextInput, .stSelectbox, .stNumberInput {
-        width: 100% !important;
+    .split-feature-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 1rem;
+        color: #e2e8f0;
+        font-weight: 500;
+    }
+
+    .split-feature-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: rgba(56, 189, 248, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #38bdf8;
+        font-weight: 700;
+    }
+
+    .split-form-side {
+        flex: 1;
+        padding: 2.5rem 2rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    /* Bento Grid Card Tokens for Dashboard */
+    .bento-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.25rem;
+        margin-bottom: 2rem;
+    }
+
+    .bento-card {
+        background: rgba(30, 41, 59, 0.7);
+        backdrop-filter: blur(14px);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+        padding: 1.5rem;
+        transition: transform 200ms ease, border-color 200ms ease;
+    }
+
+    .bento-card:hover {
+        transform: translateY(-3px);
+        border-color: rgba(56, 189, 248, 0.4);
+    }
+
+    .bento-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.75rem;
+    }
+
+    .bento-card-title {
+        color: var(--text-secondary);
+        font-size: 0.88rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .bento-card-value {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #ffffff;
+        letter-spacing: -0.02em;
+    }
+
+    .bento-card-badge {
+        font-size: 0.8rem;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 20px;
     }
     
     /* Header Card */
     .header-card {
-        background: rgba(30, 41, 59, 0.8);
-        backdrop-filter: blur(12px);
+        background: rgba(30, 41, 59, 0.75);
+        backdrop-filter: blur(14px);
         border: 1px solid rgba(255, 255, 255, 0.12);
-        padding: 1.5rem 2rem;
-        border-radius: 16px;
-        margin-bottom: 1.5rem;
+        padding: 1.75rem 2rem;
+        border-radius: 20px;
+        margin-bottom: 1.75rem;
         box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
     }
     
     .header-title {
-        font-size: clamp(1.4rem, 4vw, 2.2rem);
-        font-weight: 700;
-        background: linear-gradient(90deg, #38bdf8, #818cf8);
+        font-size: var(--font-h1);
+        font-weight: 800;
+        background: linear-gradient(90deg, #ffffff, #38bdf8, #818cf8);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         margin: 0;
     }
     
     .header-subtitle {
-        color: #cbd5e1;
-        font-size: clamp(0.85rem, 2.5vw, 1rem);
-        margin-top: 0.3rem;
+        color: var(--text-secondary);
+        font-size: var(--font-body);
+        margin-top: 0.4rem;
     }
     
-    /* Feedback Containers - High Contrast */
+    /* Feedback Containers - High Contrast WCAG AA */
     .feedback-correct {
-        background-color: #064e3b;
+        background-color: rgba(6, 78, 59, 0.85);
         border: 1px solid #10b981;
-        border-radius: 10px;
-        padding: 1rem 1.2rem;
+        border-radius: 12px;
+        padding: 1.25rem 1.5rem;
         margin-top: 1rem;
         color: #ecfdf5;
     }
     
     .feedback-incorrect {
-        background-color: #7f1d1d;
+        background-color: rgba(127, 29, 29, 0.85);
         border: 1px solid #ef4444;
-        border-radius: 10px;
-        padding: 1rem 1.2rem;
+        border-radius: 12px;
+        padding: 1.25rem 1.5rem;
         margin-top: 1rem;
         color: #fef2f2;
     }
     
     .explanation-card {
-        border-radius: 8px;
-        padding: 1rem 1.2rem;
+        border-radius: 10px;
+        padding: 1rem 1.25rem;
         margin-top: 0.75rem;
         line-height: 1.6;
     }
     
     .explanation-card.correct-exp {
         border-left: 5px solid #10b981;
-        background: #064e3b;
+        background: rgba(6, 78, 59, 0.9);
         color: #f0fdf4;
     }
 
@@ -217,7 +326,7 @@ st.markdown("""
     
     .explanation-card.incorrect-exp {
         border-left: 5px solid #ef4444;
-        background: #7f1d1d;
+        background: rgba(127, 29, 29, 0.9);
         color: #fff1f2;
     }
 
@@ -228,6 +337,7 @@ st.markdown("""
     /* Sidebar Readability (Light Sidebar Background) */
     [data-testid="stSidebar"] {
         background-color: #f8fafc !important;
+        border-right: 1px solid #e2e8f0 !important;
     }
     
     [data-testid="stSidebar"] *, [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label {
@@ -255,29 +365,36 @@ st.markdown("""
         display: none !important;
     }
 
-    /* ========================================================= */
-    /* RESPONSIVIDADE FLUIDA & MODOS ADAPTATIVOS (DESKTOP E MOBILE) */
-    /* ========================================================= */
-    
-    /* Ajustes Gerais de Padding para telas pequenas */
-    .block-container {
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
-        max-width: 100% !important;
+    /* Respeito às preferências de movimento do usuário (A11y) */
+    @media (prefers-reduced-motion: reduce) {
+        *, ::before, ::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
     }
 
-    /* Regras para Dispositivos Móveis (Celulares e Tablets <= 768px) */
+    /* Regras Responsivas Mobile (<= 768px) */
     @media screen and (max-width: 768px) {
         .block-container {
             padding: 0.75rem 0.5rem !important;
         }
 
-        .login-container {
-            width: 100% !important;
-            max-width: 100% !important;
-            margin: 0.25rem auto !important;
-            padding: 1rem 0.75rem !important;
-            border-radius: 12px !important;
+        .split-login-wrapper {
+            flex-direction: column !important;
+            margin: 0.5rem auto !important;
+            border-radius: 16px !important;
+        }
+
+        .split-hero-side {
+            padding: 1.75rem 1.25rem !important;
+            border-right: none !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .split-form-side {
+            padding: 1.5rem 1.25rem !important;
         }
 
         .stTabs [data-baseweb="tab-list"] {
@@ -294,11 +411,10 @@ st.markdown("""
 
         .stButton > button, div.stButton > button {
             font-size: 0.95rem !important;
-            padding: 0.5rem 0.75rem !important;
+            padding: 0.55rem 0.75rem !important;
             width: 100% !important;
         }
 
-        /* Empilhamento automático em telas pequenas */
         [data-testid="column"] {
             width: 100% !important;
             flex: 1 1 100% !important;
@@ -325,75 +441,100 @@ if "menu_selecionado" not in st.session_state:
     st.session_state["menu_selecionado"] = "🎯 Ir Direto para o Simulado"
 
 # ----------------------------------------------------
-# TELA EXCLUSIVA DE LOGIN (SE NÃO AUTENTICADO)
+# TELA EXCLUSIVA DE LOGIN (SE NÃO AUTENTICADO) - SPLIT SCREEN EDTECH
 # ----------------------------------------------------
 if not st.session_state["user"]:
-    st.markdown("""
-    <div class="login-container">
-        <div class="login-title">Simulador CIA IIA V2025</div>
-        <div class="login-subtitle">Acesse sua conta para ter acesso completo aos simulados e acompanhamento de progresso.</div>
-    </div>
-    """, unsafe_allow_html=True)
+    col_hero, col_form = st.columns([1.1, 1], gap="large")
 
-    # Renderização responsiva do container centralizado sem colunas de espaço fixo
-    tab_login, tab_tradicional = st.tabs([
-        "🔑 Fazer Login", 
-        "📝 Criar Conta"
-    ])
+    with col_hero:
+        st.markdown("""
+        <div style="background: linear-gradient(135deg, rgba(2,132,199,0.2) 0%, rgba(99,102,241,0.25) 100%); padding: 2.5rem 2rem; border-radius: 24px; border: 1px solid rgba(255,255,255,0.12); margin-top: 1rem;">
+            <div style="display:inline-flex; align-items:center; gap:8px; padding:6px 16px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.3); border-radius:30px; color:#38bdf8; font-size:0.85rem; font-weight:700; margin-bottom:1.25rem;">
+                🛡️ PLATAFORMA OFICIAL IIA V2025
+            </div>
+            <h1 style="font-size: clamp(1.8rem, 3.5vw, 2.5rem); font-weight:800; line-height:1.25; background: linear-gradient(90deg, #ffffff, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem;">
+                Prepare-se com Excelência para a Certificação CIA Parte 2
+            </h1>
+            <p style="color: #94a3b8; font-size: 1.05rem; line-height: 1.6; margin-bottom: 2rem;">
+                Simulados situacionais inteligentes com gabaritos comentados opção a opção, métricas de desempenho e reforço personalizado de erros.
+            </p>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <div style="display:flex; align-items:center; gap:12px; color:#e2e8f0; font-weight:600;">
+                    <div style="width:32px; height:32px; border-radius:8px; background:rgba(56,189,248,0.2); display:flex; align-items:center; justify-content:center; color:#38bdf8;">✓</div>
+                    100% Alinhado às novas Normas Globais IIA 2025
+                </div>
+                <div style="display:flex; align-items:center; gap:12px; color:#e2e8f0; font-weight:600;">
+                    <div style="width:32px; height:32px; border-radius:8px; background:rgba(99,102,241,0.2); display:flex; align-items:center; justify-content:center; color:#818cf8;">✓</div>
+                    Modo Reforço Inteligente para Questões Incorretas
+                </div>
+                <div style="display:flex; align-items:center; gap:12px; color:#e2e8f0; font-weight:600;">
+                    <div style="width:32px; height:32px; border-radius:8px; background:rgba(16,185,129,0.2); display:flex; align-items:center; justify-content:center; color:#10b981;">✓</div>
+                    Divisão Ponderada Oficial (50% A / 40% B / 10% C)
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
-    # TAB 1: FAZER LOGIN TRADICIONAL
-    with tab_login:
-        st.markdown("<p style='color:#f8fafc; font-weight:600;'>Acesse com seu e-mail e senha cadastrados:</p>", unsafe_allow_html=True)
-        log_email = st.text_input("E-mail", key="log_email")
-        log_senha = st.text_input("Senha", type="password", key="log_senha")
+    with col_form:
+        st.markdown("<h2 style='font-size:1.6rem; font-weight:700; color:#ffffff; margin-top:1rem; margin-bottom:0.25rem;'>Bem-vindo(a) de volta! 👋</h2>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#94a3b8; font-size:0.95rem; margin-bottom:1.5rem;'>Acesse com sua conta para continuar seus estudos.</p>", unsafe_allow_html=True)
 
-        if st.button("🔑 Entrar", type="primary", use_container_width=True, key="btn_login_direct"):
-            if not log_email.strip() or not log_senha.strip():
-                st.error("Preencha o e-mail e a senha.")
-            else:
-                user_obj, msg = db.autenticar_usuario(log_email, log_senha)
-                if user_obj:
-                    st.session_state["user"] = user_obj
-                    st.success(f"Bem-vindo(a) de volta, {user_obj['nome']}!")
-                    st.rerun()
+        tab_login, tab_tradicional = st.tabs([
+            "🔑 Fazer Login", 
+            "📝 Criar Conta"
+        ])
+
+        # TAB 1: FAZER LOGIN TRADICIONAL
+        with tab_login:
+            log_email = st.text_input("E-mail", key="log_email", placeholder="seu.email@exemplo.com")
+            log_senha = st.text_input("Senha", type="password", key="log_senha", placeholder="••••••••")
+
+            if st.button("🔑 Entrar na Plataforma", type="primary", use_container_width=True, key="btn_login_direct"):
+                if not log_email.strip() or not log_senha.strip():
+                    st.error("Por favor, preencha o e-mail e a senha.")
                 else:
-                    st.error(msg)
-
-    # TAB 2: CRIAR CONTA TRADICIONAL
-    with tab_tradicional:
-        st.markdown("<p style='color:#f8fafc; font-weight:600;'>Preencha os campos abaixo para criar sua conta:</p>", unsafe_allow_html=True)
-        reg_nome = st.text_input("Nome", key="reg_nome")
-        reg_sobrenome = st.text_input("Sobrenome", key="reg_sobrenome")
-        reg_email = st.text_input("E-mail", key="reg_email")
-        reg_senha = st.text_input("Senha", type="password", key="reg_senha")
-        reg_conf_senha = st.text_input("Confirmação de Senha", type="password", key="reg_conf_senha")
-
-        # Feedback de validação visual de confirmação de senha em tempo real
-        if reg_conf_senha:
-            if reg_senha == reg_conf_senha:
-                st.markdown("<p style='color:#4ade80; font-size:0.85rem; font-weight:600;'>✅ As senhas coincidem.</p>", unsafe_allow_html=True)
-            else:
-                st.markdown("<p style='color:#fca5a5; font-size:0.85rem; font-weight:600;'>❌ As senhas não coincidem.</p>", unsafe_allow_html=True)
-
-        if st.button("✨ Criar Conta", type="primary", use_container_width=True, key="btn_reg_direct"):
-            if not (reg_nome.strip() and reg_sobrenome.strip() and reg_email.strip() and reg_senha.strip() and reg_conf_senha.strip()):
-                st.error("Por favor, preencha todos os campos do formulário.")
-            elif reg_senha != reg_conf_senha:
-                st.error("As senhas digitadas não coincidem. Verifique e tente novamente.")
-            elif len(reg_senha) < 4:
-                st.error("A senha deve conter no mínimo 4 caracteres.")
-            else:
-                ok, msg = db.registrar_usuario(reg_nome, reg_sobrenome, reg_email, reg_senha)
-                if ok:
-                    user_obj, _ = db.autenticar_usuario(reg_email, reg_senha)
+                    user_obj, msg = db.autenticar_usuario(log_email, log_senha)
                     if user_obj:
                         st.session_state["user"] = user_obj
-                        st.success(f"Conta criada com sucesso! Bem-vindo(a), {user_obj['nome']}!")
+                        st.success(f"Bem-vindo(a) de volta, {user_obj['nome']}!")
                         st.rerun()
                     else:
-                        st.success("Conta criada com sucesso! Faça login para continuar.")
+                        st.error(msg)
+
+        # TAB 2: CRIAR CONTA TRADICIONAL
+        with tab_tradicional:
+            reg_nome = st.text_input("Nome", key="reg_nome", placeholder="Seu nome")
+            reg_sobrenome = st.text_input("Sobrenome", key="reg_sobrenome", placeholder="Seu sobrenome")
+            reg_email = st.text_input("E-mail", key="reg_email", placeholder="seu.email@exemplo.com")
+            reg_senha = st.text_input("Senha", type="password", key="reg_senha", placeholder="Mínimo 4 caracteres")
+            reg_conf_senha = st.text_input("Confirmação de Senha", type="password", key="reg_conf_senha", placeholder="Repita sua senha")
+
+            # Feedback de validação visual de confirmação de senha em tempo real
+            if reg_conf_senha:
+                if reg_senha == reg_conf_senha:
+                    st.markdown("<p style='color:#4ade80; font-size:0.85rem; font-weight:600;'>✅ As senhas coincidem.</p>", unsafe_allow_html=True)
                 else:
-                    st.error(msg)
+                    st.markdown("<p style='color:#fca5a5; font-size:0.85rem; font-weight:600;'>❌ As senhas não coincidem.</p>", unsafe_allow_html=True)
+
+            if st.button("✨ Criar Minha Conta", type="primary", use_container_width=True, key="btn_reg_direct"):
+                if not (reg_nome.strip() and reg_sobrenome.strip() and reg_email.strip() and reg_senha.strip() and reg_conf_senha.strip()):
+                    st.error("Por favor, preencha todos os campos do formulário.")
+                elif reg_senha != reg_conf_senha:
+                    st.error("As senhas digitadas não coincidem. Verifique e tente novamente.")
+                elif len(reg_senha) < 4:
+                    st.error("A senha deve conter no mínimo 4 caracteres.")
+                else:
+                    ok, msg = db.registrar_usuario(reg_nome, reg_sobrenome, reg_email, reg_senha)
+                    if ok:
+                        user_obj, _ = db.autenticar_usuario(reg_email, reg_senha)
+                        if user_obj:
+                            st.session_state["user"] = user_obj
+                            st.success(f"Conta criada com sucesso! Bem-vindo(a), {user_obj['nome']}!")
+                            st.rerun()
+                        else:
+                            st.success("Conta criada com sucesso! Faça login para continuar.")
+                    else:
+                        st.error(msg)
 
     st.stop()
 
@@ -716,7 +857,7 @@ elif opcao_menu == "📊 Progresso":
     </div>
     """, unsafe_allow_html=True)
 
-    hist = db.carregar_historico_usuario(user_cur["email"])
+    hist = db.get_user_progress(user_cur["email"])
 
     if not hist:
         st.info("Nenhum histórico de simulado encontrado para este usuário. Realize seu primeiro simulado na opção 'Simulados'!")
@@ -728,15 +869,43 @@ elif opcao_menu == "📊 Progresso":
         total_acertos = df["acertos"].sum()
         media_aproveitamento = df["aproveitamento_pct"].mean()
 
-        col1, col2, col3, col4 = st.columns(4)
-        with col1:
-            st.metric("Simulados Concluídos", total_tentativas)
-        with col2:
-            st.metric("Questões Respondidas", total_q_respondidas)
-        with col3:
-            st.metric("Total de Acertos", total_acertos)
-        with col4:
-            st.metric("Média de Aproveitamento", f"{media_aproveitamento:.1f}%")
+        # Exibição em Bento Grid EdTech 2026
+        st.markdown(f"""
+        <div class="bento-grid">
+            <div class="bento-card">
+                <div class="bento-card-header">
+                    <span class="bento-card-title">Simulados Concluídos</span>
+                    <span class="bento-card-badge" style="background:rgba(56,189,248,0.2); color:#38bdf8;">🎯 ATIVIDADE</span>
+                </div>
+                <div class="bento-card-value">{total_tentativas}</div>
+                <div style="font-size:0.8rem; color:#94a3b8; margin-top:0.4rem;">Sessões registradas no banco</div>
+            </div>
+            <div class="bento-card">
+                <div class="bento-card-header">
+                    <span class="bento-card-title">Questões Respondidas</span>
+                    <span class="bento-card-badge" style="background:rgba(99,102,241,0.2); color:#818cf8;">📚 VOLUME</span>
+                </div>
+                <div class="bento-card-value">{total_q_respondidas}</div>
+                <div style="font-size:0.8rem; color:#94a3b8; margin-top:0.4rem;">Itens situacionais processados</div>
+            </div>
+            <div class="bento-card">
+                <div class="bento-card-header">
+                    <span class="bento-card-title">Total de Acertos</span>
+                    <span class="bento-card-badge" style="background:rgba(16,185,129,0.2); color:#10b981;">✅ PRECISÃO</span>
+                </div>
+                <div class="bento-card-value">{total_acertos}</div>
+                <div style="font-size:0.8rem; color:#94a3b8; margin-top:0.4rem;">Respostas corretas confirmadas</div>
+            </div>
+            <div class="bento-card">
+                <div class="bento-card-header">
+                    <span class="bento-card-title">Média de Aproveitamento</span>
+                    <span class="bento-card-badge" style="background:rgba(245,158,11,0.2); color:#f59e0b;">📊 DESEMPENHO</span>
+                </div>
+                <div class="bento-card-value">{media_aproveitamento:.1f}%</div>
+                <div style="font-size:0.8rem; color:#94a3b8; margin-top:0.4rem;">Meta recomendada IIA: ≥ 75%</div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
         st.divider()
 
